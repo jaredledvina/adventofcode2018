@@ -4,6 +4,7 @@ def read_input():
         puzzle_input = [int(line.rstrip().strip('+')) for line in f]
     return puzzle_input
 
+
 def part_2(puzzle_input):
     """
     >>> part_2([1, -1])
@@ -37,7 +38,5 @@ def main():
     print('Answer for Part 2 is:', part_2(puzzle_input))
 
 
-
 if __name__ == '__main__':
     main()
-

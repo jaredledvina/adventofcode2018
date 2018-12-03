@@ -24,7 +24,7 @@ def count_repeats(text, count):
 
 def part_1(puzzle_input):
     """
-    >>> part_1(['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab'])
+    >>> part_1(['abcdef', 'bababc', 'abbcde', 'abcccd', 'aabcdd', 'abcdee', 'ababab']) # noqa: E501
     12
     """
     total_doubles = 0
