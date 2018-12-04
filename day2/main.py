@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+
+from difflib import get_close_matches, SequenceMatcher
+
+
 def read_input():
     with open('input.txt', 'r') as f:
         puzzle_input = [line.rstrip() for line in f]
@@ -40,8 +44,25 @@ def part_1(puzzle_input):
 def part_2(puzzle_input):
     """
     >>> part_2(['abcde', 'fghij', 'klmno', 'pqrst', 'fguij', 'axcye', 'wvxyz'])
-    fgij
+    'fgij'
     """
+    all_matches = {}
+    for entry in puzzle_input:
+        temp_input = [x for x in puzzle_input if x != entry]
+        match = get_close_matches(entry, temp_input, n=1)
+        if match:
+            all_matches[entry] = match
+    match_ratios = {}
+    for k, v in all_matches.items():
+        match_ratio = SequenceMatcher(lambda x: x == " ", k, v[0]).ratio()
+        match_ratios[match_ratio] = [k, v[0]]
+
+    closest_match = match_ratios[max(match_ratios.keys())]
+    result = []
+    for index, letter in enumerate(closest_match[0]):
+        if closest_match[1][index] == letter:
+            result.append(letter)
+    return ''.join(result)
 
 
 def main():
