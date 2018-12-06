@@ -34,36 +34,17 @@ def get_guard_schedule(schedule):
                 guard_schedule[current_guard] = {}
         elif 'falls asleep' in schedule[entry]:
             current_guard_sleep = entry
-            if current_guard_sleep in guard_schedule[current_guard]:
-                guard_schedule[current_guard][current_guard_sleep] += 1
-            else:
-                guard_schedule[current_guard][current_guard_sleep] = 1
         elif 'wakes up' in schedule[entry]:
             current_guard_wakes = entry
             time_asleep = current_guard_wakes - current_guard_sleep
             sleeping_minute = current_guard_sleep
-            for minute in range(0, time_asleep.seconds // 60 - 1):
+            for minute in range(0, time_asleep.seconds // 60):
                 sleeping_minute = sleeping_minute + timedelta(0, 60)
-                if sleeping_minute in guard_schedule[current_guard]:
-                    guard_schedule[current_guard][sleeping_minute] += 1
+                if sleeping_minute.minute in guard_schedule[current_guard]:
+                    guard_schedule[current_guard][sleeping_minute.minute] += 1
                 else:
-                    guard_schedule[current_guard][sleeping_minute] = 1
+                    guard_schedule[current_guard][sleeping_minute.minute] = 1
     return guard_schedule
-
-
-def condense_guard_schedule(guard_schedule):
-    """
-    Takes a guard_schedule and condenses it into just minutes
-    """
-    condensed_guard_schedule = {}
-    for guard in guard_schedule:
-        condensed_guard_schedule[guard] = {}
-        for entry in guard_schedule[guard]:
-            if entry.minute in condensed_guard_schedule[guard]:
-                condensed_guard_schedule[guard][entry.minute] += 1
-            else:
-                condensed_guard_schedule[guard][entry.minute] = 1
-    return condensed_guard_schedule
 
 
 def part_1(puzzle_input):
@@ -73,10 +54,11 @@ def part_1(puzzle_input):
     """
     schedule = get_schedule(puzzle_input)
     guard_schedule = get_guard_schedule(schedule)
-    condensed_guard_schedule = condense_guard_schedule(guard_schedule)
-    sleep = { key: len(value) for key, value in condensed_guard_schedule.items() }
+    sleep = { key: len(value) for key, value in guard_schedule.items() }
     sleepiest_guard = max(sleep, key=sleep.get)
-    sleepiest_minute = max(condensed_guard_schedule[sleepiest_guard], key=condensed_guard_schedule[sleepiest_guard].get)
+    sleepiest_minute = max(guard_schedule[sleepiest_guard], key=guard_schedule[sleepiest_guard].get)
+    print(sleepiest_guard)
+    print(sleepiest_minute)
     return int(sleepiest_guard) * int(sleepiest_minute)
 
 
