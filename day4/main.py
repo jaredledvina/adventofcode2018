@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from collections import OrderedDict
+from collections import OrderedDict, Counter, defaultdict
 from datetime import datetime, timedelta
 import re
 
@@ -25,25 +25,19 @@ def get_guard_schedule(schedule):
     """
     Returns the schedule of each guard
     """
-    guard_schedule = {}
+    guard_schedule = defaultdict(Counter)
     for entry in schedule:
         if 'Guard' in schedule[entry]:
             current_guard = re.search(r'^Guard #(\d+) begins shift$', schedule[entry])[1]
             current_guard_start = entry
-            if current_guard not in guard_schedule:
-                guard_schedule[current_guard] = {}
         elif 'falls asleep' in schedule[entry]:
             current_guard_sleep = entry
         elif 'wakes up' in schedule[entry]:
             current_guard_wakes = entry
-            time_asleep = current_guard_wakes - current_guard_sleep
-            sleeping_minute = current_guard_sleep
-            for minute in range(0, time_asleep.seconds // 60):
-                sleeping_minute = sleeping_minute + timedelta(0, 60)
-                if sleeping_minute.minute in guard_schedule[current_guard]:
-                    guard_schedule[current_guard][sleeping_minute.minute] += 1
-                else:
-                    guard_schedule[current_guard][sleeping_minute.minute] = 1
+            sleeping_minutes = []
+            for minute in range(current_guard_sleep.minute, current_guard_wakes.minute):
+                sleeping_minutes.append(minute % 60 )
+            guard_schedule[current_guard].update(Counter(sleeping_minutes))
     return guard_schedule
 
 
@@ -54,12 +48,12 @@ def part_1(puzzle_input):
     """
     schedule = get_schedule(puzzle_input)
     guard_schedule = get_guard_schedule(schedule)
-    sleep = { key: len(value) for key, value in guard_schedule.items() }
-    sleepiest_guard = max(sleep, key=sleep.get)
-    sleepiest_minute = max(guard_schedule[sleepiest_guard], key=guard_schedule[sleepiest_guard].get)
-    print(sleepiest_guard)
-    print(sleepiest_minute)
-    return int(sleepiest_guard) * int(sleepiest_minute)
+    total_minutes_asleep = []
+    for guard_id, counter in guard_schedule.items():
+        total_minutes_asleep.append((sum(counter.values()), guard_id))
+    _, guard_id = max(total_minutes_asleep)
+    minute = guard_schedule[guard_id].most_common()[0][0]
+    return int(guard_id) * minute
 
 
 
