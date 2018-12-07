@@ -56,9 +56,19 @@ def part_1(puzzle_input):
     return int(guard_id) * minute
 
 
-
 def part_2(puzzle_input):
-    pass
+    """
+    >>> part_2(['[1518-11-01 00:00] Guard #10 begins shift', '[1518-11-01 00:05] falls asleep', '[1518-11-01 00:25] wakes up', '[1518-11-01 00:30] falls asleep', '[1518-11-01 00:55] wakes up', '[1518-11-01 23:58] Guard #99 begins shift', '[1518-11-02 00:40] falls asleep', '[1518-11-02 00:50] wakes up', '[1518-11-03 00:05] Guard #10 begins shift', '[1518-11-03 00:24] falls asleep', '[1518-11-03 00:29] wakes up', '[1518-11-04 00:02] Guard #99 begins shift', '[1518-11-04 00:36] falls asleep', '[1518-11-04 00:46] wakes up', '[1518-11-05 00:03] Guard #99 begins shift', '[1518-11-05 00:45] falls asleep', '[1518-11-05 00:55] wakes up]'])
+    4455
+    """
+    schedule = get_schedule(puzzle_input)
+    guard_schedule = get_guard_schedule(schedule)
+    most_asleep_minutes = []
+    for guard_id, counter in guard_schedule.items():
+        most_asleep_minutes.append((counter.most_common()[0][::-1], guard_id))
+    (_, minute), guard_id = max(most_asleep_minutes)
+    return int(guard_id) * minute
+
 
 def main():
     puzzle_input = read_input()
