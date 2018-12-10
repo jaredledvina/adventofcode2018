@@ -6,12 +6,7 @@ def read_input():
     return puzzle_input
 
 
-def part_1(puzzle_input):
-    """
-    >>> part_1(['dabAcCaCBAcCcaDA'])
-    10
-    """
-    polymer = puzzle_input[0]
+def react(polymer):
     count = 0
     while count < len(polymer) - 1:
         unit = polymer[count]
@@ -22,11 +17,26 @@ def part_1(puzzle_input):
                 count -= 1
         else:
             count += 1
-    return len(polymer)
+    return polymer
+
+
+def part_1(puzzle_input):
+    """
+    >>> part_1(['dabAcCaCBAcCcaDA'])
+    10
+    """
+    polymer = puzzle_input[0]
+    reacted = react(polymer)
+    return len(reacted)
 
 
 def part_2(puzzle_input):
-    pass
+    """
+    >>> part_2(['dabAcCaCBAcCcaDA'])
+    4
+    """
+    polymer = puzzle_input[0]
+    return len(polymer)
 
 def main():
     puzzle_input = read_input()
