@@ -36,7 +36,15 @@ def part_2(puzzle_input):
     4
     """
     polymer = puzzle_input[0]
-    return len(polymer)
+    letters = [chr(pair) for pair in range(ord('a'),ord('z')+1)]
+    range(0, len(polymer), 2)
+    shortest = 100000
+    for letter in letters:
+        cleaned = [unit for unit in polymer if unit != letter and unit != letter.upper()]
+        reacted = react(cleaned)
+        if shortest and len(reacted) < shortest:
+            shortest = len(reacted)
+    return shortest
 
 def main():
     puzzle_input = read_input()
